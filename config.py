@@ -26,9 +26,10 @@ def read_config(configdir):
           parsed['passive checks'][k]['host'] = s[0]
         if len(s) == 2:
           parsed['passive checks'][k]['checkname'] = s[1]
+          parsed['passive checks'][k]['interval'] = 300
         if len(s) > 2:
           parsed['passive checks'][k]['checkname'] = s[1]
-          parsed['passive checks'][k]['interval'] = s[2]
+          parsed['passive checks'][k]['interval'] = int(s[2])
         parsed['passive checks'][k]['command'] = config['passive checks'][k]
       if 'nrdp' in config:
         parsed['nrdp'] = {}
