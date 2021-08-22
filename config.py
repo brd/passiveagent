@@ -29,7 +29,13 @@ def read_config(configdir):
           parsed['passive checks'][k]['interval'] = 300
         if len(s) > 2:
           parsed['passive checks'][k]['checkname'] = s[1]
-          parsed['passive checks'][k]['interval'] = int(s[2])
+          if int(s[2]) > 10 and int(s[2]) < 86400:
+            parsed['passive checks'][k]['interval'] = int(s[2])
+          else:
+            logging.warning(
+              'interval for %s, outside of min(10)/max(86400): %s defaulting to 300s',
+              s[1], int(s[2]))
+            parsed['passive checks'][k]['interval'] = 300
         parsed['passive checks'][k]['command'] = config['passive checks'][k]
       if 'nrdp' in config:
         parsed['nrdp'] = {}
