@@ -1,5 +1,6 @@
 import configparser
 import os
+import socket
 
 def read_config(configdir):
   config = configparser.ConfigParser()
@@ -22,8 +23,12 @@ def read_config(configdir):
       for k in config['passive checks']:
         parsed['passive checks'][k] = {}
         s = k.split('|')
+        # hostname
         if s[0] != '%%HOSTNAME%%':
           parsed['passive checks'][k]['host'] = s[0]
+        else:
+          parsed['passive checks'][k]['host'] = socket.gethostname()
+        # checkname/interval
         if len(s) == 2:
           parsed['passive checks'][k]['checkname'] = s[1]
           parsed['passive checks'][k]['interval'] = 300
