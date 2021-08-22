@@ -10,7 +10,8 @@ def start_sched(config):
   s = sched.scheduler()
   for c in config['passive checks']:
     s.enter(config['passive checks'][c]['interval'] - 7, 1,
-      check.run_test(config['passive checks'][c]['command']))
+      check.run_check(config['passive checks'][c]['command'],
+        config['nrdp']['parent']))
 
   s.run()
   return s

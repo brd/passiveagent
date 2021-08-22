@@ -22,8 +22,8 @@ def check_check(config):
 
   return config
 
-def run_test(cmd):
-  logging.info(f'run_test(): {cmd.split()}')
+def run_check(cmd):
+  logging.info(f'run_check(): {cmd.split()}')
   res = subprocess.run(cmd.split(), capture_output=True, text=True)
-  logging.info(f'returncode: {res.returncode}; stdout: {res.stdout.rstrip()}')
+  logging.info(f'run_check(): returncode: {res.returncode}; stdout: {res.stdout.rstrip()}')
   return { "code": res.returncode, "stdout": res.stdout.rstrip(), "stderr": res.stderr.rstrip() }
