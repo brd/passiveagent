@@ -41,7 +41,15 @@ def read_config(configdir):
               'interval for %s, outside of min(10)/max(86400): %s defaulting to 300s',
               s[1], int(s[2]))
             parsed['passive checks'][k]['interval'] = 300
-        parsed['passive checks'][k]['command'] = config['passive checks'][k]
+        # command
+        if config['passive checks'][k].startswith('/'):
+          parsed['passive checks'][k]['command'] = config['passive checks'][k]
+        else:
+          if config['plugin directives']['plugin_path'].endswith('/'):
+            parsed['passive checks'][k]['command'] = config['plugin directives']['plugin_path'] + config['passive checks'][k]
+          else:
+            parsed['passive checks'][k]['command'] = config['plugin directives']['plugin_path'] + '/' + config['passive checks'][k]
+
       if 'nrdp' in config:
         parsed['nrdp'] = {}
         for k in config['nrdp']:
