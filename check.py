@@ -11,11 +11,11 @@ def check_check(config):
       print(f'line: {config["passive checks"][f]}')
       file = os.path.join(dir,config['passive checks'][f].split()[0])
       if not os.path.isfile(file):
+        logging.warning('%s: is not accessible', file)
         print(f'check: {file} is not accessible')
         config.remove_option('passive checks', f)
-        # XXX: log but not fatal
   else: # isdir
-    # XXX: log but is fatal
+    logging.error('plugin_path: %s: is not accessible', dir)
     print(f'plugin_path: {dir} is not accessible')
     sys.exit(2)
 

@@ -9,11 +9,11 @@ def read_config(configdir):
     for name in files:
       if name.endswith('.cfg'):
         f = os.path.join(root,name)
-        print(f'file: {f}')
         try:
           config.read(f)
           success = True
         except Exception as e:
+          logging.error('Error opening and reading: %s', str(e))
           print(f'Error opening and reading: {f}: {str(e)}')
           sys.exit(2)
   if success:
@@ -46,4 +46,5 @@ def read_config(configdir):
     return parsed
   else:
     print(f'No .cfg files found in {configdir}')
+    logging.error('No .cfg files found in: %s', configdir)
     sys.exit(2)
