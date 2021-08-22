@@ -2,6 +2,8 @@ import configparser
 import os
 import socket
 
+import check
+
 def read_config(configdir):
   config = configparser.ConfigParser()
   parsed = {}
