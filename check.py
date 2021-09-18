@@ -1,10 +1,13 @@
 import configparser
 import logging
 import os
+import requests
 import sys
 import subprocess
 
-def check_check(config):
+import schedule
+
+def check_check(c):
   dir = config['plugin directives']['plugin_path']
   if os.path.isdir(dir):
     for f in config['passive checks']:
@@ -22,8 +25,28 @@ def check_check(config):
 
   return config
 
-def run_check(cmd):
-  logging.info(f'run_check(): {cmd.split()}')
-  res = subprocess.run(cmd.split(), capture_output=True, text=True)
-  logging.info(f'run_check(): returncode: {res.returncode}; stdout: {res.stdout.rstrip()}')
-  return { "code": res.returncode, "stdout": res.stdout.rstrip(), "stderr": res.stderr.rstrip() }
+def run_check(c, pc):
+  schedule.reschedule(c, pc)
+  logging.info('run_check(): %s', c['passive checks'][pc]['command'].split())
+  res = subprocess.run(c['passive checks'][pc]['command'].split(), capture_output=True, text=True)
+  logging.info('run_check(): returncode: %s; stdout: %s', res.returncode, res.stdout.rstrip())
+  post_results(c, pc, { "code": res.returncode, "stdout": res.stdout.rstrip() })
+
+def post_results(c, pc, res):
+  data = {}
+  data['checkresults'] = []
+  data['checkresults'].append({})
+  data['checkresults'][0]['service'] = {}
+  data['checkresults'][0]['service']['hostname'] = c['passive checks'][pc]['hostname']
+  data['checkresults'][0]['service']['servicename'] = c['passive checks'][pc]['checkname']
+  data['checkresults'][0]['service']['state'] = res['code']
+  data['checkresults'][0]['service']['output'] = res['stdout']
+  print(data)
+  for u in c['nrdp']['parent']:
+    if not u.endswith('/'):
+      u += '/'
+    r = requests.post(u, json=data, timeout=10)
+    if r.status_code == requests.codes.ok:
+      logging.info('Submitted successfully to NRDP: %s', u)
+    else:
+      logging.warning('Failed submitting to NRDP: %s; Error: %s: ', u, r.status_code)

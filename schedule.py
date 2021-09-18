@@ -2,16 +2,19 @@ import sched
 
 import check
 
-def clear_sched(s):
-  for i in s.queue:
-    s.cancel(i)
+def clear_sched(c):
+  for i in c['s'].queue:
+    c['s'].cancel(i)
 
-def start_sched(config):
-  s = sched.scheduler()
-  for c in config['passive checks']:
-    s.enter(config['passive checks'][c]['interval'] - 7, 1,
-      check.run_check(config['passive checks'][c]['command'],
-        config['nrdp']['parent']))
+def start_sched(c):
+  c['s'] = sched.scheduler()
+  for pc in c['passive checks']:
+    print(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - 7}')
+    c['s'].enter(c['passive checks'][pc]['interval'] - 7, 1,
+      check.run_check, argument=(c, pc,))
 
-  s.run()
-  return s
+  c['s'].run()
+
+def reschedule(c, pc):
+  c['s'].enter(c['passive checks'][pc]['interval'] - 7, 1,
+    check.run_check, argument=(c, pc,))
