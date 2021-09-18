@@ -1,8 +1,34 @@
 import configparser
+import logging
 import os
 import socket
 
 import check
+
+def check_command(cmd):
+  # escape hatch for space seperated arguments
+  if " " in cmd:
+    if os.path.isfile(cmd.split()[0]):
+      return cmd
+  if not os.path.isfile(cmd):
+    command = cmd.split('/')
+    command.remove('')
+    i = 0
+    l = len(command)
+    while i < l:
+      # assemble the array minus i
+      tempcmd = ""
+      for x in range(l - i):
+        tempcmd += '/' + command[x]
+        if os.path.isfile(tempcmd):
+          # Add args to the end
+          for j in range(i + 1, l):
+            tempcmd += ' ' + command[j]
+          return tempcmd
+        else:
+          i += 1
+  else:
+    return cmd
 
 def read_config(c):
   config = configparser.ConfigParser()
@@ -66,6 +92,13 @@ def read_config(c):
             c['passive checks'][k]['command'] = config['plugin directives']['plugin_path'] + config['passive checks'][k]
           else:
             c['passive checks'][k]['command'] = config['plugin directives']['plugin_path'] + '/' + config['passive checks'][k]
+        # strip slash components away
+        # %HOSTNAME%|dns|60 = check_dns/-H/_healthcheck.corp.care2.com/-q/TXT/-t/5:3
+        print(f'passive command: {c["passive checks"][k]["command"]}')
+        c['passive checks'][k]['command'] = check_command(c['passive checks'][k]['command'])
+        if c['passive checks'][k]['command'] == None:
+          logging.warning('unable to find command for: %s', c['passive checks'][k]['checkname'])
+          c['passive checks'].pop(k)
   else:
     print(f'No .cfg files found in {c["config_dir"]}')
     logging.error('No .cfg files found in: %s', c['config_dir'])
