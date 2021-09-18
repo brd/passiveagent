@@ -1,3 +1,4 @@
+import random
 import sched
 
 import check
@@ -9,12 +10,14 @@ def clear_sched(c):
 def start_sched(c):
   c['s'] = sched.scheduler()
   for pc in c['passive checks']:
-    print(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - 7}')
-    c['s'].enter(c['passive checks'][pc]['interval'] - 7, 1,
+    r = random.randrange(1,7)
+    print(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - r}')
+    c['s'].enter(c['passive checks'][pc]['interval'] - r, 1,
       check.run_check, argument=(c, pc,))
 
   c['s'].run()
 
 def reschedule(c, pc):
-  c['s'].enter(c['passive checks'][pc]['interval'] - 7, 1,
+  r = random.randrange(1,7)
+  c['s'].enter(c['passive checks'][pc]['interval'] - r, 1,
     check.run_check, argument=(c, pc,))
