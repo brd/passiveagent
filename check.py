@@ -7,7 +7,7 @@ import subprocess
 
 import schedule
 
-def check_check(c):
+def check_check(config):
   dir = config['plugin directives']['plugin_path']
   if os.path.isdir(dir):
     for f in config['passive checks']:
@@ -25,12 +25,16 @@ def check_check(c):
 
   return config
 
-def run_check(c, pc):
-  schedule.reschedule(c, pc)
+def run_check(c, pc, reschedule_and_post=True):
+  if reschedule_and_post:
+    schedule.reschedule(c, pc)
   logging.info('run_check(): %s', c['passive checks'][pc]['command'].split())
   res = subprocess.run(c['passive checks'][pc]['command'].split(), capture_output=True, text=True)
   logging.info('run_check(): returncode: %s; stdout: %s', res.returncode, res.stdout.rstrip())
-  post_results(c, pc, { "code": res.returncode, "stdout": res.stdout.rstrip() })
+  if reschedule_and_post:
+    post_results(c, pc, { "code": res.returncode, "stdout": res.stdout.rstrip() })
+  else:
+    return { "code": res.returncode, "stdout": res.stdout.rstrip(), "stderr": res.stderr.rstrip() }
 
 def post_results(c, pc, res):
   data = {}

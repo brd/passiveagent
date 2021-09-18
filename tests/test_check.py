@@ -13,40 +13,70 @@ def test_check_check():
 
 def test_run_check_bad_path():
   with pytest.raises(FileNotFoundError) as execinfo:
-    check.run_check('/bin/foobar')
+    c = {}
+    pc = 0
+    c['passive checks'] = {}
+    c['passive checks'][pc] = {}
+    c['passive checks'][pc]['command'] = '/bin/foobar'
+    check.run_check(c, pc, False)
 
 def test_run_check_exit_1():
-  test = check.run_check('/bin/ls lkjsdlfjasdfljsalkdajfjl')
+  c = {}
+  pc = 0
+  c['passive checks'] = {}
+  c['passive checks'][pc] = {}
+  c['passive checks'][pc]['command'] = '/bin/ls lkjsdlfjasdfljsalkdajfjl'
+  test = check.run_check(c, pc, False)
   assert test['code'] == 1
   assert test['stdout'] == ""
   assert test['stderr'] == "ls: lkjsdlfjasdfljsalkdajfjl: No such file or directory"
 
 def test_run_check_exit_0():
-  test = check.run_check('echo foo')
+  c = {}
+  pc = 0
+  c['passive checks'] = {}
+  c['passive checks'][pc] = {}
+  c['passive checks'][pc]['command'] = 'echo foo'
+  test = check.run_check(c, pc, False)
   assert test['code'] == 0
   assert test['stdout'] == "foo"
   assert test['stderr'] == ""
 
 def test_run_check_check_load_OK():
-  c = '/usr/local/libexec/nagios/check_load'
-  if os.path.isfile(c):
-    test = check.run_check(c + ' -w 100,100,100 -c 200,200,200')
+  cmd = '/usr/local/libexec/nagios/check_load'
+  if os.path.isfile(cmd):
+    c = {}
+    pc = 0
+    c['passive checks'] = {}
+    c['passive checks'][pc] = {}
+    c['passive checks'][pc]['command'] = cmd + ' -w 100,100,100 -c 200,200,200'
+    test = check.run_check(c, pc, False)
     assert test['code'] == 0
     assert "OK - load average: " in test['stdout']
     assert test['stderr'] == ""
 
 def test_run_check_check_load_warn():
-  c = '/usr/local/libexec/nagios/check_load'
-  if os.path.isfile(c):
-    test = check.run_check(c + ' -w 0,0,0 -c 200,200,200')
+  cmd = '/usr/local/libexec/nagios/check_load'
+  if os.path.isfile(cmd):
+    c = {}
+    pc = 0
+    c['passive checks'] = {}
+    c['passive checks'][pc] = {}
+    c['passive checks'][pc]['command'] = cmd + ' -w 0,0,0 -c 200,200,200'
+    test = check.run_check(c, pc, False)
     assert test['code'] == 1
     assert "WARNING - load average: " in test['stdout']
     assert test['stderr'] == ""
 
 def test_run_check_check_load_crit():
-  c = '/usr/local/libexec/nagios/check_load'
-  if os.path.isfile(c):
-    test = check.run_check(c + ' -w 0,0,0 -c 0,0,0')
+  cmd = '/usr/local/libexec/nagios/check_load'
+  if os.path.isfile(cmd):
+    c = {}
+    pc = 0
+    c['passive checks'] = {}
+    c['passive checks'][pc] = {}
+    c['passive checks'][pc]['command'] = cmd + ' -w 0,0,0 -c 0,0,0'
+    test = check.run_check(c, pc, False)
     assert test['code'] == 2
     assert "CRITICAL - load average: " in test['stdout']
     assert test['stderr'] == ""
