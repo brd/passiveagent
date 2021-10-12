@@ -57,8 +57,12 @@ def post_results(c, pc, res):
   for u in c['nrdp']['parent']:
     if not u.endswith('/'):
       u += '/'
-    r = requests.post(u, data=postdata, timeout=10)
-    if r.status_code == requests.codes.ok:
-      logging.info('Submitted successfully to NRDP: %s', u)
+    try:
+      r = requests.post(u, data=postdata, timeout=10)
+    except requests.Timeout:
+      logging.warning('Timeout posting results to %s', u)
     else:
-      logging.warning('Failed submitting to NRDP: %s; Error: %s: ', u, r.status_code)
+      if r.status_code == requests.codes.ok:
+        logging.info('Submitted successfully to NRDP: %s', u)
+      else:
+        logging.warning('Failed submitting to NRDP: %s; Error: %s: ', u, r.status_code)
