@@ -1,4 +1,5 @@
 import configparser
+import json
 import logging
 import os
 import requests
@@ -40,16 +41,23 @@ def post_results(c, pc, res):
   data = {}
   data['checkresults'] = []
   data['checkresults'].append({})
-  data['checkresults'][0]['service'] = {}
-  data['checkresults'][0]['service']['hostname'] = c['passive checks'][pc]['hostname']
-  data['checkresults'][0]['service']['servicename'] = c['passive checks'][pc]['checkname']
-  data['checkresults'][0]['service']['state'] = res['code']
-  data['checkresults'][0]['service']['output'] = res['stdout']
-  print(data)
+  data['checkresults'][0]['hostname'] = c['passive checks'][pc]['hostname']
+  data['checkresults'][0]['servicename'] = c['passive checks'][pc]['checkname']
+  data['checkresults'][0]['state'] = res['code']
+  data['checkresults'][0]['output'] = res['stdout']
+  data['checkresults'][0]['checkresult'] = {}
+  data['checkresults'][0]['checkresult']['type'] = "service"
+  postdata = {}
+  postdata['host']  = c['passive checks'][pc]['hostname']
+  postdata['debug'] = 1
+  postdata['type']  = "service"
+  postdata['cmd']   = "submitcheck"
+  postdata['token'] = c['nrdp']['token']
+  postdata['json']  = json.dumps(data)
   for u in c['nrdp']['parent']:
     if not u.endswith('/'):
       u += '/'
-    r = requests.post(u, json=data, timeout=10)
+    r = requests.post(u, data=postdata, timeout=10)
     if r.status_code == requests.codes.ok:
       logging.info('Submitted successfully to NRDP: %s', u)
     else:
