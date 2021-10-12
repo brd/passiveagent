@@ -65,7 +65,7 @@ def read_config(c):
         c['passive checks'][k] = {}
         s = k.split('|')
         # hostname
-        if s[0] != '%%hostname%%':
+        if s[0] != '%hostname%':
           c['passive checks'][k]['hostname'] = s[0]
         else:
           if 'hostname' in c['nrdp']:

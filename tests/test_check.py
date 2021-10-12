@@ -8,7 +8,7 @@ def test_check_check():
   config['plugin directives'] = {}
   config['plugin directives']['plugin_path'] = '/usr/local/libexec/nagios'
   config['passive checks'] = {}
-  config['passive checks']['%%HOSTNAME%%|ZPOOL'] = 'check_zpools -p ALL'
+  config['passive checks']['%HOSTNAME%|ZPOOL'] = 'check_zpools -p ALL'
   check.check_check(config)
 
 def test_run_check_bad_path():
