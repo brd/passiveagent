@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import config
+import argparse
 import logging
 import requests
 import signal
@@ -30,8 +30,14 @@ def handle_exit(signum, frame):
   sys.exit(0)
 
 def main():
+  parser = argparse.ArgumentParser(description="Passive Agent")
+  parser.add_argument('-l', '--logfile', default='/var/log/lite.log',
+    help='override the location of the logfile')
+  args = parser.parse_args()
+  print(f'args: {args.log}')
+  sys.exit(3)
   # Setup logging
-  logging.basicConfig(filename='lite.log', level=logging.INFO,
+  logging.basicConfig(filename=args.logfile, level=logging.INFO,
     format='%(asctime)s %(message)s', datefmt='%Y/%m/%d %I:%M:%S')
   logging.info('Starting up..')
   initialize_signal_handlers()
