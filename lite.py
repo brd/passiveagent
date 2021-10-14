@@ -12,7 +12,6 @@ from passiveagent import schedule
 
 global c
 c = {}
-c['config_dir'] = '/usr/local/passive-agent/etc'
 
 def initialize_signal_handlers():
   signal.signal(signal.SIGHUP, handle_sighup)
@@ -31,9 +30,13 @@ def handle_exit(signum, frame):
 
 def main():
   parser = argparse.ArgumentParser(description="Passive Agent")
+  parser.add_argument('-c', '--configdir',
+    default='/usr/local/etc/passiveagent',
+    help='override the location of the configdir')
   parser.add_argument('-l', '--logfile', default='/var/log/lite.log',
     help='override the location of the logfile')
   args = parser.parse_args()
+  c['config_dir'] = args.configdir
   sys.exit(3)
   # Setup logging
   logging.basicConfig(filename=args.logfile, level=logging.INFO,
