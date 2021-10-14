@@ -4,7 +4,7 @@ import os
 import socket
 import sys
 
-import check
+from passiveagent import check
 
 def check_command(cmd):
   # escape hatch for space seperated arguments

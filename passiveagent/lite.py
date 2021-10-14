@@ -6,9 +6,9 @@ import requests
 import signal
 import sys
 
-import check
-import config
-import schedule
+from passiveagent import check
+from passiveagent import config
+from passiveagent import schedule
 
 global c
 c = {}

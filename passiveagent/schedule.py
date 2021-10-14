@@ -1,7 +1,7 @@
 import random
 import sched
 
-import check
+from passiveagent import check
 
 def clear_sched(c):
   for i in c['s'].queue:
