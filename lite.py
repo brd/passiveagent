@@ -34,7 +34,6 @@ def main():
   parser.add_argument('-l', '--logfile', default='/var/log/lite.log',
     help='override the location of the logfile')
   args = parser.parse_args()
-  print(f'args: {args.log}')
   sys.exit(3)
   # Setup logging
   logging.basicConfig(filename=args.logfile, level=logging.INFO,
