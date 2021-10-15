@@ -56,7 +56,7 @@ def main():
   c['pidfile'] = args.pidfile
   try:
     with open(c['pidfile'], "w") as p:
-      p.write(os.getpid())
+      p.write(str(os.getpid()))
   except:
     logging.error('Unable to create pidfile: %s', c['pidfile'])
     sys.exit(2)
