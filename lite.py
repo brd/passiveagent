@@ -57,8 +57,8 @@ def main():
   try:
     with open(c['pidfile'], "w") as p:
       p.write(str(os.getpid()))
-  except:
-    logging.error('Unable to create pidfile: %s', c['pidfile'])
+  except Exception as e:
+    logging.error('Unable to create pidfile: %s: %s', c['pidfile'], e)
     sys.exit(2)
 
   initialize_signal_handlers()
