@@ -44,7 +44,6 @@ def read_config(c):
           success = True
         except Exception as e:
           logging.error('Error opening and reading: %s', str(e))
-          print(f'Error opening and reading: {f}: {str(e)}')
           sys.exit(2)
   if success:
     if 'nrdp' in config:
@@ -95,12 +94,11 @@ def read_config(c):
             c['passive checks'][k]['command'] = config['plugin directives']['plugin_path'] + '/' + config['passive checks'][k]
         # strip slash components away
         # %HOSTNAME%|dns|60 = check_dns/-H/_healthcheck.corp.care2.com/-q/TXT/-t/5:3
-        print(f'passive command: {c["passive checks"][k]["command"]}')
+        logging.debug(f'passive command: {c["passive checks"][k]["command"]}')
         c['passive checks'][k]['command'] = check_command(c['passive checks'][k]['command'])
         if c['passive checks'][k]['command'] == None:
           logging.warning('unable to find command for: %s', c['passive checks'][k]['checkname'])
           c['passive checks'].pop(k)
   else:
-    print(f'No .cfg files found in {c["config_dir"]}')
     logging.error('No .cfg files found in: %s', c['config_dir'])
     sys.exit(2)

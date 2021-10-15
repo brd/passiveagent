@@ -11,7 +11,7 @@ def start_sched(c):
   c['s'] = sched.scheduler()
   for pc in c['passive checks']:
     r = random.randrange(1,7)
-    print(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - r}')
+    logging.warning(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - r}')
     c['s'].enter(c['passive checks'][pc]['interval'] - r, 1,
       check.run_check, argument=(c, pc,))
 
