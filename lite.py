@@ -73,7 +73,8 @@ def main():
     help='override the location of the configdir')
   parser.add_argument('-f', '--foreground', action='store_true',
     help='Do not detach and become a deamon')
-  parser.add_argument('-l', '--logfile', default='/var/log/lite.log',
+  parser.add_argument('-l', '--logfile',
+    default='/var/log/passiveagent.log',
     help='override the location of the logfile')
   parser.add_argument('-p', '--pidfile',
     default='/var/run/passiveagent.pid',
