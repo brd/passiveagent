@@ -2,7 +2,7 @@ import logging
 import random
 import sched
 
-from passiveagent import check
+from libpassiveagent import check
 
 def clear_sched(c):
   for i in c['s'].queue:

@@ -6,7 +6,7 @@ import requests
 import sys
 import subprocess
 
-from passiveagent import schedule
+from libpassiveagent import schedule
 
 def check_check(config):
   dir = config['plugin directives']['plugin_path']

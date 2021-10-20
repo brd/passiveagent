@@ -7,9 +7,9 @@ import requests
 import signal
 import sys
 
-from passiveagent import check
-from passiveagent import config
-from passiveagent import schedule
+from libpassiveagent import check
+from libpassiveagent import config
+from libpassiveagent import schedule
 
 global c
 c = {}
