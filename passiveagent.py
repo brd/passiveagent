@@ -21,8 +21,8 @@ def initialize_signal_handlers():
 
 def handle_sighup(signal, frame):
   logging.warning('SIGHUP recieved, reloading config..')
-  clear_sched(c)
-  read_config(c)
+  schedule.clear_sched(c)
+  config.read_config(c)
   schedule.start_sched(c)
 
 def handle_exit(signum, frame):
