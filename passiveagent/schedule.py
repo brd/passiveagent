@@ -11,10 +11,9 @@ def clear_sched(c):
 def start_sched(c):
   c['s'] = sched.scheduler()
   for pc in c['passive checks']:
-    r = random.randrange(1,7)
-    logging.warning(f'scheduling: {pc} in {c["passive checks"][pc]["interval"] - r}')
-    c['s'].enter(c['passive checks'][pc]['interval'] - r, 1,
-      check.run_check, argument=(c, pc,))
+    r = random.randrange(1,20)
+    logging.warning(f'scheduling initial check: {pc} in {r}')
+    c['s'].enter(r, 1, check.run_check, argument=(c, pc,))
 
   c['s'].run()
 
