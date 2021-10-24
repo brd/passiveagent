@@ -1,11 +1,13 @@
 ### Libraries used
 
-*Base*
+**Base**
+
 [ConfigParser](https://docs.python.org/3/library/configparser.html)
 
 [Sched](https://docs.python.org/3/library/sched.html)
 
-*External*
+**External**
+
 [Requests](https://docs.python-requests.org/en/master/index.html)
 
 ### Other
