@@ -1,7 +1,7 @@
 import pytest
 import os
 
-import check
+from libpassiveagent import check
 
 def test_check_check():
   config = {}

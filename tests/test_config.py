@@ -1,6 +1,6 @@
 import pytest
 
-import config
+from libpassiveagent import config
 
 def test_simple_config():
   c = {}
