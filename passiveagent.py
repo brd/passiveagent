@@ -26,7 +26,10 @@ def handle_sighup(signal, frame):
   schedule.start_sched(c)
 
 def handle_exit(signum, frame):
-  logging.warning('%s recieved, exiting..', signal.strsignal(signum))
+  if sys.version_info.major >= 3 and sys.version_info.minor >= 8:
+    logging.warning('%s recieved, exiting..', signal.strsignal(signum))
+  else:
+    logging.warning('exiting..')
   remove_pid(c['pidfile'])
   sys.exit(0)
 
