@@ -26,7 +26,10 @@ def run_check(c, pc, reschedule_and_post=True):
   if reschedule_and_post:
     schedule.reschedule(c, pc)
   logging.info('run_check(): %s', c['passive checks'][pc]['command'].split())
-  res = subprocess.run(c['passive checks'][pc]['command'].split(), capture_output=True, text=True)
+  if sys.version_info.major >= 3 and sys.version_info.minor >= 7:
+    res = subprocess.run(c['passive checks'][pc]['command'].split(), capture_output=True, text=True)
+  else:
+    res = subprocess.run(c['passive checks'][pc]['command'].split(), stdout=subprocess.PIPE, universal_newlines=True)
   logging.info('run_check(): returncode: %s; stdout: %s', res.returncode, res.stdout.rstrip())
   if reschedule_and_post:
     post_results(c, pc, { "code": res.returncode, "stdout": res.stdout.rstrip() })
