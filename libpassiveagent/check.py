@@ -63,6 +63,8 @@ def post_results(c, pc, res):
       r = requests.post(u, data=postdata, timeout=10)
     except requests.Timeout:
       logging.warning('Timeout posting results to %s', u)
+    except requests.exceptions.ConnectionError:
+      logging.warning('Connection Error posting results to %s', u)
     else:
       if r.status_code == requests.codes.ok:
         logging.info('Submitted successfully to NRDP: %s', u)
