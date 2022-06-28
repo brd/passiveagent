@@ -33,6 +33,7 @@ def check_command(cmd):
 
 def read_config(c):
   config = configparser.ConfigParser()
+  config.optionxform = lambda option: option
   parsed = {}
   success = False
   for root, dirs, files in os.walk(c['config_dir']):
@@ -64,7 +65,7 @@ def read_config(c):
         c['passive checks'][k] = {}
         s = k.split('|')
         # hostname
-        if s[0] != '%hostname%':
+        if s[0] != '%HOSTNAME%':
           c['passive checks'][k]['hostname'] = s[0]
         else:
           if 'hostname' in c['nrdp']:
